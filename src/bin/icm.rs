@@ -10,6 +10,7 @@ use embassy_stm32::{
     dma::NoDma,
     time::khz,
 };
+use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_time::{Duration, Timer};
 use {defmt_rtt as _, panic_probe as _};
 
@@ -20,6 +21,10 @@ use icm::Icm20948;
 async fn main(_spawner: Spawner) {
     let p = init(Default::default());
     info!("Hey there");
+
+    let mut k = Output::new(p.PF10, Level::Low, Speed::Low);
+    k.set_high();
+    Timer::after(Duration::from_millis(1000)).await;
 
     let irq = interrupt::take!(I2C2_EV);
     let mut i2c = I2c::new(p.I2C2, p.PF1, p.PF0, irq, NoDma, NoDma, khz(200), Default::default());
@@ -36,6 +41,6 @@ async fn main(_spawner: Spawner) {
                  all.acc.x, all.acc.y, all.acc.z,
                  all.gyr.x, all.gyr.y, all.gyr.z,
                  all.mag.x, all.mag.y, all.mag.z);
-        Timer::after(Duration::from_millis(250)).await;
+        Timer::after(Duration::from_millis(100)).await;
     }
 }

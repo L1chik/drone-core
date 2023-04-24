@@ -1,0 +1,8 @@
+[package]
+name = "rc-xf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+defmt.workspace = true
+bitvec = { version = "1", default-features = false, features = ["atomic"] }

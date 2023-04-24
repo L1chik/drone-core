@@ -7,10 +7,11 @@ use defmt::*;
 use embassy_executor::Spawner;
 use embassy_stm32::{
     init,
-    usart::{BufferedUart, Config, State},
+    usart::Config,
     interrupt,
 };
-use embedded_io::asynch::BufRead;
+use embassy_stm32::dma::NoDma;
+use embassy_stm32::usart::Uart;
 use {defmt_rtt as _, panic_probe as _};
 
 #[embassy_executor::main]
@@ -21,20 +22,15 @@ async fn main(_spawner: Spawner) {
     let mut config = Config::default();
     config.baudrate = 9600;
 
-
-    let mut state = State::new();
-    let irq = interrupt::take!(USART6);
+    let irq = interrupt::take!(USART2);
     let mut dm = [0u8; 1280];
-    let mut bx = BufferedUart::new(
-        &mut state, p.USART6,
-        p.PG9, p.PG14,
-        irq, &mut [], &mut dm, config,
+    let mut bx = Uart::new(
+        p.USART2,
+        p.PD6, p.PD5, irq, NoDma, p.DMA1_CH5, config
     );
     loop {
-        let buf = bx.fill_buf().await.unwrap();
-        let data = from_utf8(buf).unwrap_or("x");
-        info!("{}", data);
-        let n = buf.len();
-        bx.consume(n);
+        let ch = bx.read_until_idle(&mut dm).await.unwrap_or(0);
+        if ch == 0 { error!("Error") }
+        println!("{}", from_utf8(&dm).unwrap_or("X"));
     }
 }

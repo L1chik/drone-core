@@ -15,11 +15,11 @@ pub trait DroneI2c {
 }
 
 pub struct AsI2c<'d, T: Instance> {
-    i2c: &'d mut I2c<'d, T>,
+    i2c: I2c<'d, T>,
 }
 
 impl<'d, T: Instance> AsI2c<'d, T> {
-    pub fn new(i2c: &'d mut I2c<'d, T>) -> Self {
+    pub fn new(i2c: I2c<'d, T>) -> Self {
         Self { i2c }
     }
 }

@@ -5,17 +5,22 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = ["common", "esc", "icm"]
+members = ["common", "controls/rc", "esc", "icm"]
+
+[workspace.dependencies.embassy-sync]
+version = "0.2.0"
+git = "https://github.com/embassy-rs/embassy.git"
+features = ["nightly"]
 
 [workspace.dependencies.embassy-stm32]
 version = "0.1.0"
 git = "https://github.com/embassy-rs/embassy.git"
-features = ["nightly", "stm32f767zi", "time-driver-any", "exti", "defmt"]
+features = ["nightly", "stm32f767zi", "time-driver-any", "exti"]
 
 [workspace.dependencies.embassy-executor]
-version = "0.1.0"
+version = "0.1.1"
 git = "https://github.com/embassy-rs/embassy.git"
-features = ["defmt", "integrated-timers"]
+features = ["defmt", "integrated-timers", "arch-cortex-m", "executor-thread"]
 
 [workspace.dependencies.embassy-time]
 version = "0.1.0"
@@ -34,17 +39,20 @@ defmt-rtt = "0.4"
 embedded-hal = "1.0.0-alpha.9"
 
 legacy-hal = { package = "embedded-hal", version = "0.2.6" }
-#embedded-hal-async = "0.2.0-alpha.0"
 
 [dependencies]
+rc-xf = { path = "controls/rc" }
 esc = { path = "esc" }
 icm = { path = "icm" }
 
 common.workspace = true
+
+embassy-sync.workspace = true
 embassy-stm32.workspace = true
 embassy-executor.workspace = true
 embassy-time.workspace = true
 embassy-embedded-hal.workspace = true
+
 embedded-hal.workspace = true
 defmt.workspace = true
 defmt-rtt.workspace = true
@@ -55,7 +63,6 @@ panic-probe = { version = "0.3", features = ["print-defmt"] }
 
 nmea = {version = "0.4", default-features = false}
 
-embedded-io = "0.4.0"
 legacy-hal = { package = "embedded-hal", version = "0.2.6" }
 
 [[bin]]
