@@ -1,0 +1,14 @@
+[package]
+name = "esc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.embassy-embedded-hal]
+version = "0.1.0"
+git = "https://github.com/embassy-rs/embassy.git"
+features = ["nightly"]
+
+[dependencies]
+defmt.workspace = true
+embassy-stm32.workspace = true
+embassy-time.workspace = true

@@ -1,0 +1,13 @@
+[package]
+name = "icm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+defmt.workspace = true
+embassy-stm32.workspace = true
+embassy-time.workspace = true
+embassy-embedded-hal.workspace = true
+common.workspace = true
+
+nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
